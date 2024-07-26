@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacto</title>
+</head>
+<body>
+    <h1>Información de Contacto</h1>
+    <p id="contactInfo">Cargando...</p>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', async function() {
+        const params = new URLSearchParams(window.location.search);
+        const chipId = params.get('chipId');
+
+        try {
+          const response = await fetch(`/check/${chipId}`);
+          const data = await response.json();
+
+          if (response.ok) {
+            if (data.registered) {
+              const { owner, contactInfo } = data.chip;
+              document.getElementById('contactInfo').textContent = `Dueño: ${owner}, Contacto: ${contactInfo}`;
+            } else {
+              document.getElementById('contactInfo').textContent = 'No se encontró información de contacto.';
+            }
+          } else {
+            document.getElementById('contactInfo').textContent = 'Error al cargar la información de contacto.';
+          }
+        } catch (error) {
+          document.getElementById('contactInfo').textContent = 'Error al conectar con el servidor.';
+        }
+      });
+    </script>
+</body>
+</html>
